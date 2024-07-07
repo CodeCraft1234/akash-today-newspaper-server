@@ -43,6 +43,7 @@ async function run() {
       const result = await newsInfocollection.find().toArray();
       res.send(result);
     });
+    ///
 
     app.get("/news/:id", async (req, res) => {
       const id = req.params.id;
