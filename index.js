@@ -23,6 +23,8 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     const newsInfocollection = client.db("Akash-Today").collection("newsInfo");
+    const categoryInfocollection = client.db("Akash-Today").collection("newsCateory");
+    const draftInfocollection = client.db("Akash-Today").collection("draft");
 
     // News Info Routes
     app.post("/news", async (req, res) => {
@@ -64,6 +66,99 @@ async function run() {
       const id = req.params.id;
       const filter = { _id: new ObjectId(id) };
       const result = await newsInfocollection.deleteOne(filter);
+      res.send(result);
+    });
+     /////////////////////////////////////////////////////////////////////////
+    //                        news info part
+    ////////////////////////////////////////////////////////////////////////
+
+    app.post("/draft",  async (req, res) => {
+      const data = req.body;
+      const result = await draftInfocollection.insertOne(data);
+      res.send(result);
+    });
+
+    app.get("/draft", async (req, res) => {
+      const result = await draftInfocollection.find().toArray();
+      res.send(result);
+    });
+    ///
+
+    app.get("/draft/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const result = await draftInfocollection.findOne(filter);
+      res.send(result);
+    });
+
+    app.patch("/draft/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const body = req.body;
+      const updatedoc = {
+        $set: {
+          title: body.title,
+          description: body.description,
+          photo: body.photo,
+          category: body.category,
+          date: body.date,
+        },
+      };
+      const result = await draftInfocollection.updateOne(filter, updatedoc);
+      res.send(result);
+    });
+
+    app.delete("/draft/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const result = await draftInfocollection.deleteOne(filter);
+      res.send(result);
+    });
+
+     /////////////////////////////////////////////////////////////////////////
+    //                     category   news info part
+    ////////////////////////////////////////////////////////////////////////
+
+    app.post("/category",  async (req, res) => {
+      const data = req.body;
+      const result = await categoryInfocollection.insertOne(data);
+      res.send(result);
+    });
+
+    app.get("/category", async (req, res) => {
+      const result = await categoryInfocollection.find().toArray();
+      res.send(result);
+    });
+    ///
+
+    app.get("/category/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const result = await categoryInfocollection.findOne(filter);
+      res.send(result);
+    });
+
+    app.patch("/category/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const body = req.body;
+      const updatedoc = {
+        $set: {
+          title: body.title,
+          description: body.description,
+          photo: body.photo,
+          category: body.category,
+          date: body.date,
+        },
+      };
+      const result = await categoryInfocollection.updateOne(filter, updatedoc);
+      res.send(result);
+    });
+
+    app.delete("/category/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const result = await categoryInfocollection.deleteOne(filter);
       res.send(result);
     });
 
