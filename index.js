@@ -3,12 +3,12 @@ const cors = require("cors");
 const app = express();
 require("dotenv").config();
 const port = process.env.PORT || 5001;
-//MIADLEWERE
+
+// Middleware
 app.use(express.json());
-app.use(cors())
+app.use(cors());
 
-
-const { MongoClient,ObjectId, ServerApiVersion } = require('mongodb');
+const { MongoClient, ObjectId, ServerApiVersion } = require('mongodb');
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@robiul.13vbdvd.mongodb.net/?retryWrites=true&w=majority`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -22,18 +22,10 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
-    // Connect the client to the server	(optional starting in v4.7)
-    // await client.connect();
     const newsInfocollection = client.db("Akash-Today").collection("newsInfo");
 
-    // Send a ping to confirm a successful connection
-    // await client.db("admin").command({ ping: 1 });
-
-     /////////////////////////////////////////////////////////////////////////
-    //                        news info part
-    ////////////////////////////////////////////////////////////////////////
-
-    app.post("/news",  async (req, res) => {
+    // News Info Routes
+    app.post("/news", async (req, res) => {
       const data = req.body;
       const result = await newsInfocollection.insertOne(data);
       res.send(result);
@@ -43,7 +35,6 @@ async function run() {
       const result = await newsInfocollection.find().toArray();
       res.send(result);
     });
-    ///
 
     app.get("/news/:id", async (req, res) => {
       const id = req.params.id;
@@ -84,7 +75,6 @@ async function run() {
 }
 run().catch(console.dir);
 
-
 app.get("/", (req, res) => {
   res.send("hello canteen");
 });
@@ -92,5 +82,3 @@ app.get("/", (req, res) => {
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
-
-
